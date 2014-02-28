@@ -9,12 +9,12 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix void: <http://rdfs.org/ns/void> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 
 ### Description ###
 
 <http://purl.org/hpi/patchr.owl> a owl:Ontology ;
-	dc:creator <http://johannes.jhercher.de> ;
 	dc:title "Patchr Ontology - A simple method to share data about erronious triples"@en ;
 	dc:description "The Patch Request Ontology provides a straightforward method to share user feedback about erronious triples. By wrapping the Graph Update Ontology (guo) a user can announce a patch request, i.e. publish requests to add, modify or delete certain facts from a dataset. Other actors can advocate or criticise the Patch. Patchr helps to select appropriate updates to gain a better quality of data from the semantic web."@en .
 
@@ -30,7 +30,7 @@ pro:PatchGroup a owl:Class ;
 
 ### ObjectProperties ###
 
-pro:hasProvenance a owl:ObjectProperty ;
+pro:hasProvenance a owl:ObjectProperty, rdf:Property ;
 	rdfs:comment "Refers to the provenance-context where this patch was created."@en ;
 	rdfs:domain [
 		a owl:Class ;
@@ -41,7 +41,7 @@ pro:hasProvenance a owl:ObjectProperty ;
 	];
 	rdfs:range prv:DataCreation.
 	
-pro:hasUpdate a owl:FunctionalProperty, owl:ObjectProperty ;
+pro:hasUpdate a owl:FunctionalProperty, owl:ObjectProperty, rdf:Property ;
 	rdfs:comment "This relation refers to a guo:UpdateInstruction. There can be only one UpdateInstruction per Patch."@en ;
 	rdfs:domain pro:Patch ;
 	rdfs:range guo:UpdateInstruction .
