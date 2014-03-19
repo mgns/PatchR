@@ -2,19 +2,17 @@ package de.hpi.patchr.api;
 
 import java.util.Random;
 
-import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-import de.hpi.patchr.vocab.PatchrDatatypeProperties;
-import de.hpi.patchr.vocab.PatchrObjectProperties;
-import de.hpi.patchr.vocab.PatchrOntClasses;
+import de.hpi.patchr.vocab.PatchrOntology;
 
 public class Patch {
 
 	public static enum UPDATE_ACTION {insert, delete};
 	public static enum UPDATE_STATUS {active, resolved};
 	
-	private final OntModel model;
+	private final Model model;
 	private String prefix;
 
 	private Resource patch;
@@ -24,7 +22,7 @@ public class Patch {
 	private Resource dataset;
 	private Resource provenance;
 	
-	public Patch(OntModel inputModel, String prefix, Resource dataset, Resource provenance) {
+	public Patch(Model inputModel, String prefix, Resource dataset, Resource provenance) {
 		this.model = inputModel;
 		this.prefix = prefix;
 		
@@ -32,13 +30,13 @@ public class Patch {
 		this.provenance = provenance;
 		
         String uri = generateURI();
-		patch = model.createIndividual(uri, PatchrOntClasses.Patch.getOntClass(model));
-		patch.addProperty(PatchrDatatypeProperties.status.getDatatypeProperty(model), UPDATE_STATUS.active.name());
+		patch = model.createResource(uri, PatchrOntology.Patch);
+		patch.addProperty(PatchrOntology.status, UPDATE_STATUS.active.name());
 		
 		if (dataset != null)
-			patch.addProperty(PatchrObjectProperties.appliesTo.getObjectProperty(model), dataset);
+			patch.addProperty(PatchrOntology.appliesTo, dataset);
 		if (provenance != null)
-			patch.addProperty(PatchrObjectProperties.provenance.getObjectProperty(model), provenance);
+			patch.addProperty(PatchrOntology.provenance, provenance);
 		
 	}
 	
@@ -52,7 +50,7 @@ public class Patch {
 		return uri.toString();
 	}
 
-	public OntModel getModel() {
+	public Model getModel() {
         return model;
     }
 

@@ -1,4 +1,4 @@
-package de.hpi.patchr.utils;
+package de.hpi.patchr.vocab;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,4 +51,5 @@ public class PrefixService {
     public static Map<String, String> getPrefixMap() {
         return prefixes;
     }
+
 }
