@@ -1,32 +1,26 @@
 package de.hpi.patchr;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
 
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import de.hpi.patchr.api.Dataset;
 import de.hpi.patchr.api.InvalidUpdateException;
+import de.hpi.patchr.api.InvalidUpdateInstructionException;
+import de.hpi.patchr.api.Patch;
+import de.hpi.patchr.api.Provenance;
+import de.hpi.patchr.api.UpdateInstruction;
 import de.hpi.patchr.utils.PatchrUtils;
 import de.hpi.patchr.utils.PrefixService;
-import de.hpi.patchr.vocab.GuoOntology;
-import de.hpi.patchr.vocab.PatchrOntology;
-import de.hpi.patchr.vocab.ProvOntology;
 
 /**
  * A PatchFactory encapsulates the creation of a model of patch requests with a
@@ -47,14 +41,6 @@ public class PatchFactory {
 
 	private Dataset dataset;
 
-	public static enum Action {
-		insert, delete
-	};
-
-	public static enum Status {
-		active, resolved
-	};
-
 	/**
 	 * @param args
 	 * @throws FileNotFoundException
@@ -71,13 +57,13 @@ public class PatchFactory {
 		 * row.get("p") + "\t" + row.get("o")); }
 		 */
 		PatchFactory g = new PatchFactory("http://example.org/patches/", "http://magnus.13mm.de/", null, dataset);
-		g.createPatchRequest(Action.insert, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/English_language"));
-		g.createPatchRequest(Action.insert, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/English_language"));
+		g.addPatchRequest(Patch.UPDATE_ACTION.insert, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/English_language"));
+		g.addPatchRequest(Patch.UPDATE_ACTION.insert, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/English_language"));
 		// (g.createPatchRequest(Action.delete,
 		// g.model.createResource("http://dbpedia.org/resource/Oregon"),
 		// g.model.createProperty("http://dbpedia.org/ontology/language"),
 		// g.model.createResource("http://dbpedia.org/resource/De_jure"));
-		g.createPatchRequest(Action.delete, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/De_juress"));
+		g.addPatchRequest(Patch.UPDATE_ACTION.delete, g.model.createResource("http://dbpedia.org/resource/Oregon"), g.model.createProperty("http://dbpedia.org/ontology/language"), g.model.createResource("http://dbpedia.org/resource/De_juress"));
 
 		g.print();
 		PatchrUtils.writeModelToFile(g.getModel(), "TURTLE", "/tmp/patches.ttl", true);
@@ -121,6 +107,7 @@ public class PatchFactory {
 	 * 
 	 */
 	public void print() {
+		System.out.println("### Model ###");
 		model.write(System.out, "TURTLE");
 	}
 
@@ -133,71 +120,31 @@ public class PatchFactory {
 	}
 
 	/**
-	 * @return
-	 */
-	private Resource createPatchRequestResource(String uri) {
-		// String uri = generateUri(prefix, "patch");
-		Resource patch = model.createResource(uri, PatchrOntology.Patch);
-
-		// the provenance
-		Resource provenance = model.createResource(generateUri(prefix, "prov"), ProvOntology.Activity);
-		if (performer != null)
-			provenance.addProperty(ProvOntology.wasAssociatedWith, performer);
-		if (actor != null)
-			provenance.addProperty(ProvOntology.wasAssociatedWith, actor);
-		Date now = Calendar.getInstance().getTime();
-		provenance.addProperty(ProvOntology.atTime, model.createTypedLiteral(new DateTime(now), XSDDatatype.XSDdateTime));
-		patch.addProperty(ProvOntology.wasGeneratedBy, provenance);
-
-		// the advocate
-		if (actor != null)
-			patch.addProperty(PatchrOntology.advocate, actor);
-
-		// the dataset
-		if (dataset != null)
-			patch.addProperty(PatchrOntology.appliesTo, dataset.getAsResource(model));
-
-		return patch;
-	}
-
-	/**
 	 * @param action
 	 * @param subject
 	 * @param property
 	 * @param object
 	 */
-	private Model createPatchRequest(Action action, Resource subject, Property property, RDFNode object) {
+	private Model createPatchRequest(Patch.UPDATE_ACTION action, Resource subject, Property predicate, RDFNode object) {
 		Model p_model = ModelFactory.createDefaultModel();
 
-		// used to create UUIDs
-		String name = subject.getURI() + " " + property.getURI() + " " + object.toString();
+		try {
+			UpdateInstruction update = new UpdateInstruction(dataset.getSparqlGraph(), action, ResourceFactory.createStatement(subject, predicate, object));
+			Provenance prov = new Provenance(actor.asResource().getURI(), actor.asResource().getURI());
+			Patch patch = new Patch(prefix, null, null, dataset, 1., Patch.UPDATE_STATUS.active, update, prov);
+			patch.addProposer(actor.asResource().getURI());
 
-		// the update
-		Resource update = p_model.createResource(generateUri(prefix, "update", action + " " + name), GuoOntology.UpdateInstruction);
-		Resource bnode = p_model.createResource().addProperty(property, object);
-
-		if (action.equals(Action.insert)) {
-			update.addProperty(GuoOntology.insert, bnode);
-		} else if (action.equals(Action.delete)) {
-			update.addProperty(GuoOntology.delete, bnode);
+			// TODO check if patch exists
+	
+			patch.getAsResource(p_model);
+		} catch (InvalidUpdateInstructionException e) {
+			e.printStackTrace();
 		}
-		update.addProperty(GuoOntology.target_subject, subject);
-
-		// the dataset graph
-		if (dataset != null)
-			update.addProperty(GuoOntology.target_graph, p_model.createResource(this.dataset.getSparqlGraph()));
-
-		// TODO check if patch exists
-
-		// the patch
-		Resource patch = createPatchRequestResource(generateUri(prefix, "patch", name));
-		patch.addProperty(PatchrOntology.update, update);
-		patch.addProperty(PatchrOntology.status, Status.active.name());
-
+		
 		return p_model;
 	}
 
-	public void addPatchRequest(Action action, Resource subject, Property property, RDFNode object) {
+	public void addPatchRequest(Patch.UPDATE_ACTION action, Resource subject, Property property, RDFNode object) {
 		Model patchModel = createPatchRequest(action, subject, property, object);
 
 		if (modelContains(patchModel)) {
@@ -246,55 +193,4 @@ public class PatchFactory {
 		return qe.execSelect().hasNext();
 	}
 
-	/**
-	 * @param prefix
-	 * @param cl
-	 * @return
-	 */
-	public String generateUri(String prefix, String cl) {
-		StringBuilder sb = new StringBuilder(prefix);
-		if (cl != null)
-			sb.append(cl + "-");
-		else
-			sb.append("uuid-");
-		sb.append(UUID.randomUUID());
-		return sb.toString();
-	}
-
-	/**
-	 * @param prefix
-	 * @param cl
-	 * @return
-	 */
-	public String generateUri(String prefix, String cl, String name) {
-		StringBuilder sb = new StringBuilder(prefix);
-		if (cl != null)
-			sb.append(cl + "-");
-		else
-			sb.append("uuid-");
-		try {
-			// sb.append(UUID.fromString(String.format("%040x", new
-			// BigInteger(1, name.getBytes("utf8")))));
-			byte[] bytesOfMessage = name.getBytes("UTF-8");
-
-			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-			sb.append(hexEncode(sha1.digest(bytesOfMessage)));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return sb.toString();
-	}
-
-	static private String hexEncode(byte[] aInput) {
-		StringBuilder result = new StringBuilder();
-		char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-		for (int idx = 0; idx < aInput.length; ++idx) {
-			byte b = aInput[idx];
-			result.append(digits[(b & 0xf0) >> 4]);
-			result.append(digits[b & 0x0f]);
-		}
-		return result.toString();
-	}
 }

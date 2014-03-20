@@ -17,7 +17,8 @@
 	dc:creator <http://magnus.13mm.de> ;
 	dc:creator <http://johannes.jhercher.de> ;
 	dc:title "Patch Request Ontology"@en ;
-	dc:description "The Patch Request Ontology provides a schema to describe desired changes in Linked Data. By wrapping the Graph Update Ontology (guo) patch requests can be formulated to add, modify or delete certain triples within a data set."@en .
+	dc:description "The Patch Request Ontology provides a schema to describe desired changes in Linked Data. By wrapping the Graph Update Ontology (guo) patch requests can be formulated to add, modify or delete certain triples within a data set."@en ;
+    owl:versionInfo "Revision: 0.4" .
 
 :Patch a owl:Class;
 	rdfs:comment "A patch is a request to add, change or delete certain triples within a dataset. A patch refers to an guo:UpdateInstruction. For convenient retrieval a patch should be described with provenance data, a patch type and a data set it applies to."@en ;
@@ -31,8 +32,9 @@
 
 ### ObjectProperties ###
 
-:hasProvenance a owl:ObjectProperty;
-	rdfs:comment "Refers to the provenance-context where this patch was created."@en;
+## deprecated, use prov:wasGeneratedBy instead
+:provenance a owl:ObjectProperty;
+	rdfs:comment "Refers to the provenance-context where this patch was created. Deprecated, use prov:wasGeneratedBy instead."@en;
 	rdfs:domain [  a owl:Class ;
                    owl:unionOf ( :Patch
                                  :PatchGroup )
@@ -41,7 +43,7 @@
 	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
     rdfs:label "hasProvenance"@en .
 	
-:hasUpdate a owl:FunctionalProperty, owl:ObjectProperty;
+:update a owl:FunctionalProperty, owl:ObjectProperty;
 	rdfs:comment "Refers to a guo:UpdateInstruction. There can be only one UpdateInstruction per Patch."@en ;
 	rdfs:domain :Patch ;
 	rdfs:range guo:UpdateInstruction ;
@@ -62,14 +64,14 @@
 	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
     rdfs:label "appliesTo"@en .
 
-:hasAdvocate a owl:ObjectProperty;
+:advocate a owl:ObjectProperty;
 	rdfs:comment "Links agents who support, i.e. like, a Patch. Each time a user creates an patch request, appropriate provenance information is generated."@en ;
 	rdfs:domain :Patch ;
 	rdfs:range foaf:Agent ;
 	rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
     rdfs:label "hasAdvocate"@en .
 	
-:hasCriticiser a owl:ObjectProperty ;
+:criticiser a owl:ObjectProperty ;
 	rdfs:comment "Links agents who disagree with the purpose of this patch."@en ;
 	rdfs:domain :Patch ;
 	rdfs:range foaf:Agent ;
@@ -114,53 +116,53 @@
 
 ###################################
 ### GUO - Graph Update Ontology ###
-
-<http://webr3.org/owl/guo#>
-    dc:description "A lightweight RDF Graph update ontology suitable for per triple insertion and deletion in addition to graph merging and synchronisation instructions."@en ;
-    dc:title "RDF Graph Update Ontology"@en ;
-    a owl:Ontology, owl:Thing ;
-    owl:versionInfo "Revision: 0.02" .
-
-<http://webr3.org/owl/guo#UpdateInstruction>
-    a owl:Class ;
-    rdfs:comment "The class of an RDF Update Instruction, an UpdateInstruction defines a instructions to be carried out by a GUO processor."@en ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "UpdateInstruction"@en .
-
-<http://webr3.org/owl/guo#delete>
-    a owl:ObjectProperty ;
-    rdfs:comment "The delete property defines blank node or resource whose predicate and object values will be used to remove triples { target_subject predicate object } from target_graph(s) if specified"@en ;
-    rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "delete"@en .
-
-<http://webr3.org/owl/guo#insert>
-    a owl:ObjectProperty ;
-    rdfs:comment "The insert property defines a blank node or resource whose predicate and object values will be used to create new triples inside target_graph(s) if specified with target_subject"@en ;
-    rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "insert"@en .
-
-<http://webr3.org/owl/guo#merge>
-    a owl:ObjectProperty ;
-    rdfs:comment "The merge property defines a graph from which all triples should be merged in to the target_graph(s), unlike insert which works on a resource level rewriting subjects, merge works on a graph level where all triples are added \"as is\"."@en ;
-    rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "merge"@en .
-
-<http://webr3.org/owl/guo#target_graph>
-    a owl:ObjectProperty ;
-    rdfs:comment "Optional property of an UpdateInstruction which allows updates to apply only to the specified Named Graph(s)"@en ;
-    rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "target graph"@en .
-
-<http://webr3.org/owl/guo#target_subject>
-    a owl:ObjectProperty ;
-    rdfs:comment "the target_subject is a required property of all UpdateInstructions which specify an insert/delete statement, target_subject is combined with the predicate and object values from insert/delete nodes to form triples which are to be either inserted or deleted (optionally constrained to one or more target_graphs)"@en ;
-    rdfs:domain :UpdateInstruction ;
-    rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
-    rdfs:label "target subject"@en ;
-    rdfs:range owl:Thing .
-
+# 
+# <http://webr3.org/owl/guo#>
+#     dc:description "A lightweight RDF Graph update ontology suitable for per triple insertion and deletion in addition to graph merging and synchronisation instructions."@en ;
+#     dc:title "RDF Graph Update Ontology"@en ;
+#     a owl:Ontology, owl:Thing ;
+#     owl:versionInfo "Revision: 0.02" .
+# 
+# <http://webr3.org/owl/guo#UpdateInstruction>
+#     a owl:Class ;
+#     rdfs:comment "The class of an RDF Update Instruction, an UpdateInstruction defines a instructions to be carried out by a GUO processor."@en ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "UpdateInstruction"@en .
+# 
+# <http://webr3.org/owl/guo#delete>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The delete property defines blank node or resource whose predicate and object values will be used to remove triples { target_subject predicate object } from target_graph(s) if specified"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "delete"@en .
+# 
+# <http://webr3.org/owl/guo#insert>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The insert property defines a blank node or resource whose predicate and object values will be used to create new triples inside target_graph(s) if specified with target_subject"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "insert"@en .
+# 
+# <http://webr3.org/owl/guo#merge>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "The merge property defines a graph from which all triples should be merged in to the target_graph(s), unlike insert which works on a resource level rewriting subjects, merge works on a graph level where all triples are added \"as is\"."@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "merge"@en .
+# 
+# <http://webr3.org/owl/guo#target_graph>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "Optional property of an UpdateInstruction which allows updates to apply only to the specified Named Graph(s)"@en ;
+#     rdfs:domain <http://webr3.org/owl/guo#UpdateInstruction> ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "target graph"@en .
+# 
+# <http://webr3.org/owl/guo#target_subject>
+#     a owl:ObjectProperty ;
+#     rdfs:comment "the target_subject is a required property of all UpdateInstructions which specify an insert/delete statement, target_subject is combined with the predicate and object values from insert/delete nodes to form triples which are to be either inserted or deleted (optionally constrained to one or more target_graphs)"@en ;
+#     rdfs:domain :UpdateInstruction ;
+#     rdfs:isDefinedBy <http://webr3.org/owl/guo#> ;
+#     rdfs:label "target subject"@en ;
+#     rdfs:range owl:Thing .
+# 
 ###################################

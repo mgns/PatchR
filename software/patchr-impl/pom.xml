@@ -1,14 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>de.hpi.patchr</groupId>
 	<artifactId>simple-service</artifactId>
+	<name>PatchR Simple Service</name>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>simple-service</name>
 
+	<parent>
+		<groupId>de.hpi.patchr</groupId>
+		<artifactId>patchr</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
 	<dependencies>
 		<!-- uncomment this to get JSON support: <dependency> <groupId>org.glassfish.jersey.media</groupId> 
@@ -40,12 +41,16 @@
 			<version>2.11.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>jena-maven-tools</artifactId>
-			<version>0.4</version>
-			<type>maven-plugin</type>
+			<groupId>org.aksw.jena-sparql-api</groupId>
+			<artifactId>jena-sparql-api-core</artifactId>
+			<version>2.10.0-13</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>org.aksw.jena-sparql-api</groupId>
+			<artifactId>jena-sparql-api-server</artifactId>
+			<version>2.10.0-13</version>
+		</dependency>
+</dependencies>
 
 	<build>
 		<plugins>
@@ -65,7 +70,7 @@
 				<version>1.2</version>
 				<executions>
 					<execution>
-			            <id>run</id>
+						<id>run</id>
 						<goals>
 							<goal>java</goal>
 						</goals>
@@ -75,38 +80,7 @@
 					<mainClass>de.hpi.patchr.Main</mainClass>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.jena</groupId>
-				<artifactId>jena-maven-tools</artifactId>
-				<configuration>
-					<includes>
-						<include>src/main/vocabs/*.ttl</include>
-					</includes>
-					<fileOptions>
-						<source>
-				            <input>default</input>
-				            <package-name>org.example.test</package-name>
-			         	</source>
-          				<source>
-							<!-- Test2.java (only) will contain OntModel declarations -->
-							<input>src/main/vocabs/patchr.ttl</input>
-							<ontology>true</ontology>
-						</source>
-					</fileOptions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>schemagen</id>
-						<goals>
-							<goal>translate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 </project>

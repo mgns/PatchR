@@ -17,8 +17,8 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.FileManager;
 
-import de.hpi.patchr.PatchFactory.Action;
 import de.hpi.patchr.api.Dataset;
+import de.hpi.patchr.api.Patch;
 import de.hpi.patchr.utils.PatchrUtils;
 
 public class PatchGenerator {
@@ -90,7 +90,7 @@ public class PatchGenerator {
 			for (StmtIterator i = deleteModel.listStatements(); i.hasNext(); ) {
 				L.info("Delete " + ++count);
 				Statement s = i.next();
-				g.addPatchRequest(Action.delete, s.getSubject().asResource(), s.getPredicate(), s.getObject());
+				g.addPatchRequest(Patch.UPDATE_ACTION.delete, s.getSubject().asResource(), s.getPredicate(), s.getObject());
 			}
 		}
 		count = 0;
@@ -98,7 +98,7 @@ public class PatchGenerator {
 			Model m = FileManager.get().loadModel(dataFolder + "insert.n3");
 			for (StmtIterator i = m.listStatements(); i.hasNext(); ) {
 				Statement s = i.next();
-				g.addPatchRequest(Action.insert, s.getSubject().asResource(), s.getPredicate(), s.getObject());
+				g.addPatchRequest(Patch.UPDATE_ACTION.insert, s.getSubject().asResource(), s.getPredicate(), s.getObject());
 				L.info("Insert " + ++count);
 			}
 		}
