@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#
+# example call:
+# bin/patchGenerator -d 
+#
+
+MAIN_CLS="de.hpi.patchr.PatchGenerator"
+MVN="mvn"
+
+cd patchr-impl/
+$MVN -q install -Dmaven.test.skip=true
+$MVN exec:java -q -Dexec.mainClass="$MAIN_CLS" -Dexec.args="$*"
+cd - > /dev/null
