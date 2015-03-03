@@ -4,7 +4,7 @@
     <groupId>de.hpi.patchr</groupId>
     <artifactId>patchr</artifactId>
     <name>PatchR</name>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
 
     <properties>
