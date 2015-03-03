@@ -1,0 +1,83 @@
+@prefix dc: <http://dublincore.org/2010/10/11/dcterms.rdf#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix guo: <http://webr3.org/owl/guo#> .
+@prefix lodd: <http://purl.org/hpi/loddefects#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pro: <http://purl.org/hpi/patchr#> .
+@prefix prv: <http://purl.org/net/provenance/ns#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+
+### Description ###
+
+<http://purl.org/hpi/patchr.owl> a owl:Ontology ;
+	dc:title "Patchr Ontology - A simple method to share data about erronious triples"@en ;
+	dc:description "The Patch Request Ontology provides a straightforward method to share user feedback about erronious triples. By wrapping the Graph Update Ontology (guo) a user can announce a patch request, i.e. publish requests to add, modify or delete certain facts from a dataset. Other actors can advocate or criticise the Patch. Patchr helps to select appropriate updates to gain a better quality of data from the semantic web."@en .
+
+
+### Classes ###
+
+pro:Patch a owl:Class ;
+	rdfs:comment "A patch is a request to add, change or delete certain triples from a dataset. A patch has exactly one UpdateInstruction. For convenient retrieval a patch should be described with provenance data, a patch Type and a Dataset it applies to."@en .
+
+pro:PatchGroup a owl:Class ;
+	rdfs:comment "A PatchGroup is a collection of singular Patches framing a complex change."@en .
+
+
+### ObjectProperties ###
+
+pro:hasProvenance a owl:ObjectProperty, rdf:Property ;
+	rdfs:comment "Refers to the provenance-context where this patch was created."@en ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			pro:Patch
+			pro:PatchGroup
+		)
+	];
+	rdfs:range prv:DataCreation.
+	
+pro:hasUpdate a owl:FunctionalProperty, owl:ObjectProperty, rdf:Property ;
+	rdfs:comment "This relation refers to a guo:UpdateInstruction. There can be only one UpdateInstruction per Patch."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range guo:UpdateInstruction .
+
+pro:memberOf a owl:ObjectProperty ;
+	rdfs:comment "The relation between a patch and a group of patches. A patch may be part of multiple p:PatchGroups."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range pro:PatchGroup .
+
+pro:appliesTo a owl:ObjectProperty ;
+	rdfs:comment "This relation refers to a void:Dataset, to allow convenient selection of patches."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range void:Dataset .
+
+pro:hasAdvocate a owl:ObjectProperty ;
+	rdfs:comment "A relation to individual agents who support (or 'like') a patch. Each time a user creates a patch request, appropriate provenance information is generated."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range foaf:Agent .
+	
+pro:hasCriticiser a owl:ObjectProperty ;
+	rdfs:comment "A relation to individual agents that disagree with the patch."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range foaf:Agent .
+
+pro:patchType a owl:ObjectProperty ;
+	rdfs:comment "A relation to a classification of a patch. There might be patch taxonomies from different applications that define the reason for a patch on their own. A patch can have multiple definitions."@en ;
+	rdfs:domain pro:Patch .
+
+
+### DatatypeProperties ###
+
+pro:comment a owl:DatatypeProperty ;
+	rdfs:comment "A comment on the patch. This is likely just an informal message a user wants to share when submitting a patch."@en ;
+	rdfs:domain pro:Patch ;
+	rdfs:range rdfs:Literal .
+
+pro:status a owl:DatatypeProperty ;
+	rdfs:domain pro:Patch ;
+	rdfs:range rdfs:Literal .

@@ -1,0 +1,8 @@
+target
+.classpath
+.idea
+.project
+.settings
+patchr-api.iml
+cache/*
+data/*
