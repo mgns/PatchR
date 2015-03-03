@@ -1,0 +1,461 @@
+@prefix : <http://purl.org/hpi/patchr#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix guo: <http://webr3.org/owl/guo#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pat: <http://purl.org/hpi/patchr#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://purl.org/net/provenance/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void> .
+@base <http://purl.org/hpi/patchr#> .
+
+<http://purl.org/hpi/patchr#> rdf:type owl:Ontology ;
+                              
+                              dc:title "Patch Request Ontology"@en ;
+                              
+                              owl:versionInfo "Revision: 0.6" ;
+                              
+                              dc:description "The Patch Request Ontology provides a schema to describe desired changes in Linked Data. By wrapping the Graph Update Ontology (guo) patch requests can be formulated to add, modify or delete particular triples (or subgraphs) within a dataset."@en ;
+                              
+                              dc:creator <http://jhercher.de> ,
+                                         <http://magnus.13mm.de> .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+###  http://purl.org/dc/terms/description
+
+dc:description rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://purl.org/hpi/patchr#advocate
+
+:advocate rdf:type owl:ObjectProperty ;
+          
+          rdfs:label "advocate"@en ;
+          
+          owl:deprecated "true"^^xsd:boolean ;
+          
+          rdfs:comment """This property is deprecated and should not be used any more, rather use a positive confidence value for advocating agents.
+
+Links agents who support, i.e. vote for, a :Patch. Each time a user creates a patch request, appropriate provenance information is generated."""@en ;
+          
+          rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+          
+          rdfs:domain :Patch ;
+          
+          rdfs:range foaf:Agent .
+
+
+
+###  http://purl.org/hpi/patchr#appliesTo
+
+:appliesTo rdf:type owl:ObjectProperty ;
+           
+           rdfs:label "appliesTo"@en ;
+           
+           rdfs:comment "Refers to a void:Dataset to allow convenient selection of patches per dataset."@en ;
+           
+           rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+           
+           rdfs:domain :Patch ;
+           
+           rdfs:range <http://rdfs.org/ns/void#Dataset> .
+
+
+
+###  http://purl.org/hpi/patchr#confidence
+
+:confidence rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "confidence"@en ;
+            
+            rdfs:comment "A confidence assigned by the creator of the patch, e.g. in case heuristic methods identified an inconsistency. This confidence must be expressed in the range of [-1,1], whereas a high value means higher confidence and a value of 1 signifies absolute certainty. Negative values indicate criticism towards this patch."@en ;
+            
+            rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+            
+            rdfs:domain prov:DataCreation ;
+            
+            rdfs:range xsd:Double .
+
+
+
+###  http://purl.org/hpi/patchr#criticiser
+
+:criticiser rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "criticiser"@en ;
+            
+            owl:deprecated "true"^^xsd:boolean ;
+            
+            rdfs:comment """This property is deprecated and should not be used any more, rather use a negative confidence value for advocating agents.
+
+Links agents who disagree, i.e. vote against, a :Patch."""@en ;
+            
+            rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+            
+            rdfs:domain :Patch ;
+            
+            rdfs:range foaf:Agent .
+
+
+
+###  http://purl.org/hpi/patchr#memberOf
+
+:memberOf rdf:type owl:ObjectProperty ;
+          
+          rdfs:label "memberOf"@en ;
+          
+          rdfs:comment "Relates a Patch to a PatchGroup. A Patch may be part of multiple :PatchGroups."@en ;
+          
+          rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+          
+          rdfs:domain :Patch ;
+          
+          rdfs:range :PatchGroup .
+
+
+
+###  http://purl.org/hpi/patchr#patchType
+
+:patchType rdf:type owl:ObjectProperty ;
+           
+           rdfs:label "patchType"@en ;
+           
+           rdfs:comment "Refers to a classification of the patch. There might be patch taxonomies from different applications that define the reason for a :Patch on their own. A :Patch may have multiple types."@en ;
+           
+           rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+           
+           rdfs:domain :Patch ;
+           
+           rdfs:range :PatchType .
+
+
+
+###  http://purl.org/hpi/patchr#patchrService
+
+:patchrService rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "patchrService"@en ;
+               
+               rdfs:comment "Links a resource to the PatchR instance responsible for collecting patch requests."@en ;
+               
+               rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#provenance
+
+:provenance rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "provenance"@en ;
+            
+            owl:deprecated "true"^^xsd:boolean ;
+            
+            rdfs:comment """This property is deprecated and should not be used any more, use prov:wasGeneratedBy instead.
+
+Refers to the provenance context where this patch was created."""@en ;
+            
+            rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+            
+            rdfs:range prov:DataCreation ;
+            
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( :Patch
+                                        :PatchGroup
+                                      )
+                        ] .
+
+
+
+###  http://purl.org/hpi/patchr#status
+
+:status rdf:type owl:ObjectProperty ;
+        
+        rdfs:label "status"@en ;
+        
+        rdfs:comment "The status of the patch, might be one of Open, Resolved, Postponed, or Rejected."@en ;
+        
+        rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+        
+        rdfs:domain :Patch ;
+        
+        rdfs:range :PatchStatus .
+
+
+
+###  http://purl.org/hpi/patchr#update
+
+:update rdf:type owl:FunctionalProperty ,
+                 owl:ObjectProperty ;
+        
+        rdfs:label "update"@en ;
+        
+        rdfs:comment "Refers to a guo:UpdateInstruction. There must be exactly one guo:UpdateInstruction per :Patch. The guo:UpdateInstruction either is a deletion, insertion, or replacement of triples for one particular subject resource."@en ;
+        
+        rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+        
+        rdfs:domain :Patch ;
+        
+        rdfs:range guo:UpdateInstruction .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://purl.org/hpi/patchr#comment
+
+:comment rdf:type owl:DatatypeProperty ;
+         
+         rdfs:label "comment"@en ;
+         
+         owl:deprecated "true"^^xsd:boolean ;
+         
+         rdfs:comment """This property is deprecated and should not be used any more, use dcterms:description instead.
+
+A comment on the patch. This is likely just an informal message a user wants to share when submitting a Patch."""@en ;
+         
+         rdfs:isDefinedBy <http://purl.org/hpi/patchr#> ;
+         
+         rdfs:range rdfs:Literal .
+
+
+
+###  http://purl.org/hpi/patchr#confidence
+
+:confidence rdf:type owl:DatatypeProperty ;
+            
+            rdfs:label "confidence"@en ;
+            
+            rdfs:comment "A confidence assigned by the creator of the patch, e.g. in case heuristic methods identified an inconsistency. This confidence must be expressed in the range of [-1,1], whereas a high value means higher confidence and a value of 1 signifies absolute certainty. Negative values indicate criticism towards this patch."@en ;
+            
+            rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://purl.org/hpi/patchr#ConjunctivePatchGroup
+
+:ConjunctivePatchGroup rdf:type owl:Class ;
+                       
+                       rdfs:label "ConjunctivePatchGroup"@en ;
+                       
+                       rdfs:subClassOf :PatchGroup ;
+                       
+                       rdfs:comment "A conjunctive patch group is collection (list) of patches where all member patches need to be applied to the dataset to resolve the problem."@en ;
+                       
+                       rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#DisjunctivePatchGroup
+
+:DisjunctivePatchGroup rdf:type owl:Class ;
+                       
+                       rdfs:label "DisjunctivePatchGroup"@en ;
+                       
+                       rdfs:subClassOf :PatchGroup ;
+                       
+                       rdfs:comment "A disjunctive patch group is collection (alternative list) of patches where one member patch need to be applied to resolve the problem."@en ;
+                       
+                       rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#Patch
+
+:Patch rdf:type owl:Class ;
+       
+       rdfs:label "Patch"@en ;
+       
+       rdfs:subClassOf [ rdf:type owl:Restriction ;
+                         owl:onProperty :appliesTo ;
+                         owl:onClass <http://rdfs.org/ns/void#Dataset> ;
+                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                       ] ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :update ;
+                         owl:onClass guo:UpdateInstruction ;
+                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                       ] ;
+       
+       rdfs:comment "A patch is a request to add, change or delete certain triples (or subgraphs) within a dataset. A patch refers to an guo:UpdateInstruction. For convenient retrieval a patch should be described with provenance data, a patch type and a dataset it applies to."@en ;
+       
+       rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#PatchGroup
+
+:PatchGroup rdf:type owl:Class ;
+            
+            rdfs:label "PatchGroup"@en ;
+            
+            rdfs:comment "A patch group is a collection of patches that apply to a common problem."@en ;
+            
+            rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#PatchStatus
+
+:PatchStatus rdf:type owl:Class ;
+             
+             rdfs:label "PatchStatus"@en ;
+             
+             rdfs:comment "The status of the patch, might be one of Open, Resolved, Postponed, or Rejected."@en ;
+             
+             rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#PatchType
+
+:PatchType rdf:type owl:Class ;
+           
+           rdfs:label "PatchType"@en ;
+           
+           rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/net/provenance/ns#DataCreation
+
+prov:DataCreation rdf:type owl:Class .
+
+
+
+###  http://rdfs.org/ns/void#Dataset
+
+<http://rdfs.org/ns/void#Dataset> rdf:type owl:Class .
+
+
+
+###  http://webr3.org/owl/guo#UpdateInstruction
+
+guo:UpdateInstruction rdf:type owl:Class .
+
+
+
+###  http://www.w3.org/2001/XMLSchema#Double
+
+xsd:Double rdf:type owl:Class .
+
+
+
+###  http://xmlns.com/foaf/0.1/Agent
+
+foaf:Agent rdf:type owl:Class .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://purl.org/hpi/patchr#Obsolete
+
+:Obsolete rdf:type :PatchStatus ,
+                   owl:NamedIndividual ;
+          
+          rdfs:label "Obsolete"@en ;
+          
+          dc:description "The patch has become obsolete, i.e. the requested triples can not be deleted or inserted to the dataset. This may happen due to external alterations to the dataset. It can be more or less ignored but is kept for archival reasons, new requests for that patch will be answered as resolved."@en ;
+          
+          rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#Open
+
+:Open rdf:type :PatchStatus ,
+               owl:NamedIndividual ;
+      
+      rdfs:label "Open"@en ;
+      
+      rdfs:comment "The patch has been raised."@en ;
+      
+      rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#Postponed
+
+:Postponed rdf:type :PatchStatus ,
+                    owl:NamedIndividual ;
+           
+           rdfs:label "Postponed"@en ;
+           
+           rdfs:comment "The patch has been postponed."@en ;
+           
+           rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#Rejected
+
+:Rejected rdf:type :PatchStatus ,
+                   owl:NamedIndividual ;
+          
+          rdfs:label "Rejected"@en ;
+          
+          rdfs:comment "The patch has been rejected, i.e. this patch will not be applied. It can be more or less ignored but is kept for archival reasons, new requests for that patch will be rejected."@en ;
+          
+          rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+###  http://purl.org/hpi/patchr#Resolved
+
+:Resolved rdf:type :PatchStatus ,
+                   owl:NamedIndividual ;
+          
+          rdfs:label "Resolved"@en ;
+          
+          rdfs:comment "The patch has been resolved, i.e. this patch has been applied. It can be more or less ignored but is kept for archival reasons, new requests for that patch will be answered as resolved."@en ;
+          
+          rdfs:isDefinedBy <http://purl.org/hpi/patchr#> .
+
+
+
+
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
+

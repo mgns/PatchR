@@ -1,1 +1,10 @@
 software/patchr-impl/target
+software/.classpath
+software/.project
+software/.settings
+software/JenaModelTest
+software/patchr-api
+software/patchr-rest
+software/patchr-server
+software/patchr-ui
+software/simple-rdf
