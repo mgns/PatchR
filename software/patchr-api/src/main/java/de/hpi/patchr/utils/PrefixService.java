@@ -1,17 +1,17 @@
 package de.hpi.patchr.utils;
 
+import com.hp.hpl.jena.rdf.model.Model;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.hp.hpl.jena.rdf.model.Model;
-
 public class PrefixService {
 
-	private static Map<String, String> prefixes = new HashMap<String, String>();
-	
-	static {
-		prefixes.put("pat", "http://purl.org/hpi/patchr#");
+    private static Map<String, String> prefixes = new HashMap<String, String>();
+
+    static {
+        prefixes.put("pat", "http://purl.org/hpi/patchr#");
 
         prefixes.put("dc", "http://purl.org/dc/elements/1.1/");
         prefixes.put("dcterms", "http://purl.org/dc/terms/");
@@ -25,18 +25,18 @@ public class PrefixService {
         prefixes.put("void", "http://rdfs.org/ns/void#");
         prefixes.put("xsd", "http://www.w3.org/2001/XMLSchema#");
     }
-	
-	public static String getAllPrefixes() {
+
+    public static String getAllPrefixes() {
         String r = "";
-		for (String key : prefixes.keySet()) {
-        	r += key + ": <" + prefixes.get(key) + ">\n";
+        for (String key : prefixes.keySet()) {
+            r += key + ": <" + prefixes.get(key) + ">\n";
         }
-		return r;
+        return r;
     }
-	
-	public static void addPrefixes(Model model) {
-		prefixes.putAll(model.getNsPrefixMap());		
-	}
+
+    public static void addPrefixes(Model model) {
+        prefixes.putAll(model.getNsPrefixMap());
+    }
 
     public static void addPrefix(String prefix, String uri) {
         prefixes.put(prefix, uri);
@@ -54,13 +54,13 @@ public class PrefixService {
         return prefixes;
     }
 
-	public static String getSparqlPrefixDecl() {
-		StringBuffer sb = new StringBuffer();
-		
-		for (String key : prefixes.keySet()) {
-			sb.append("PREFIX " + key + ": <" + prefixes.get(key) + ">\n");
-		}
-		
-		return sb.toString();
-	}
+    public static String getSparqlPrefixDecl() {
+        StringBuffer sb = new StringBuffer();
+
+        for (String key : prefixes.keySet()) {
+            sb.append("PREFIX " + key + ": <" + prefixes.get(key) + ">\n");
+        }
+
+        return sb.toString();
+    }
 }

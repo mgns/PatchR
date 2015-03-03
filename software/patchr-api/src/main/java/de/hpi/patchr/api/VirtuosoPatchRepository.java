@@ -1,27 +1,16 @@
 package de.hpi.patchr.api;
 
-import java.util.*;
-
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.*;
-
-import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
-import de.hpi.patchr.PatchFactory;
+import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import de.hpi.patchr.PatchUtils;
-import de.hpi.patchr.exceptions.InvalidUpdateInstructionException;
 import de.hpi.patchr.io.DataReader;
 import de.hpi.patchr.io.DataWriter;
 import de.hpi.patchr.io.VirtuosoWriter;
 import de.hpi.patchr.utils.PrefixService;
-import de.hpi.patchr.vocab.PatchrOntology;
-import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
-import org.aksw.jena_sparql_api.model.QueryExecutionFactoryModel;
-import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VirtuosoPatchRepository extends PatchRepository {
 
@@ -126,18 +115,18 @@ public class VirtuosoPatchRepository extends PatchRepository {
     private String getPatchExistenceWhereClause(Patch patch) {
         String whereClause = "";
 
-    //    try {
-            // TODO
-            whereClause = "{"
-                    + "?patch a pat:Patch ;\n"
-                    + "  pat:appliesTo <" + patch.getDataset().getUri() + "> ;\n"
-                    + "  pat:update ?update .\n"
-                    + "?update guo:target_subject <" + patch.getUpdate().getSubject() + "> ;\n"
-            //        + "  <" + patch.getUpdate().getActionProperty().getURI() + "> " + patch.getUpdate().getUpdateGraphAsBNode() + " .\n"
-                    + "}";
-    //    } catch (InvalidUpdateInstructionException e) {
-    //        L.error(e);
-    //    }
+        //    try {
+        // TODO
+        whereClause = "{"
+                + "?patch a pat:Patch ;\n"
+                + "  pat:appliesTo <" + patch.getDataset().getUri() + "> ;\n"
+                + "  pat:update ?update .\n"
+                + "?update guo:target_subject <" + patch.getUpdate().getSubject() + "> ;\n"
+                //        + "  <" + patch.getUpdate().getActionProperty().getURI() + "> " + patch.getUpdate().getUpdateGraphAsBNode() + " .\n"
+                + "}";
+        //    } catch (InvalidUpdateInstructionException e) {
+        //        L.error(e);
+        //    }
 
         return whereClause;
     }

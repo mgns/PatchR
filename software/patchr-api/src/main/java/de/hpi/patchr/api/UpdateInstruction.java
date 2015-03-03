@@ -1,15 +1,17 @@
 package de.hpi.patchr.api;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
+import de.hpi.patchr.exceptions.InvalidUpdateInstructionException;
+import de.hpi.patchr.vocab.GuoOntology;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import com.hp.hpl.jena.rdf.model.*;
-
-import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
-import de.hpi.patchr.exceptions.InvalidUpdateInstructionException;
-import de.hpi.patchr.vocab.GuoOntology;
 
 /**
  * Simple UpdateInstruction works for a set of statements having the same subject.

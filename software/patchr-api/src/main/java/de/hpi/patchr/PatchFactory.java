@@ -17,7 +17,7 @@ import java.util.Set;
 
 /**
  * A PatchFactory encapsulates the creation of a model of patch requests.
- *
+ * <p/>
  * Generates new IDs, so don't use it to re-create patches.
  *
  * @author magnus

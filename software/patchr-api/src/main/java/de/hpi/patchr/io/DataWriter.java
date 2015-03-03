@@ -1,8 +1,8 @@
 package de.hpi.patchr.io;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.model.QueryExecutionFactoryModel;
-import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * @author magnus

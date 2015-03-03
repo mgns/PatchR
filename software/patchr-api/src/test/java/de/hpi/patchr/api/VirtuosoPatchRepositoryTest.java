@@ -1,17 +1,15 @@
 package de.hpi.patchr.api;
 
 import com.google.common.base.Joiner;
-import org.junit.Assume;
-import org.junit.Test;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
-
 import de.hpi.patchr.exceptions.InvalidUpdateInstructionException;
 import de.hpi.patchr.io.VirtuosoWriter;
 import de.hpi.patchr.vocab.PatchrOntology;
+import org.junit.Assume;
+import org.junit.Test;
 
 import java.util.List;
 

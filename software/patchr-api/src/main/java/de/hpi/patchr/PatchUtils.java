@@ -36,16 +36,18 @@ public final class PatchUtils {
      */
     public static Collection<Patch> instantiatePatchesFromModel(QueryExecutionFactory queryFactory) {
 
-        final String sparqlSelectPatches = PrefixService.getSparqlPrefixDecl() +
+        final String sparqlSelect = PrefixService.getSparqlPrefixDecl() +
                 "SELECT DISTINCT ?patch WHERE {\n" +
                 "  ?patch a pat:Patch .\n" +
                 "}";
 
-        Collection<String> patchURIs = new ArrayList<>();
+        PatchRepository.L.info(sparqlSelect);
+
+        Collection<String> patchURIs = new ArrayList<String>();
 
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelectPatches);
+            qe = queryFactory.createQueryExecution(sparqlSelect);
             ResultSet results = qe.execSelect();
 
             while (results.hasNext()) {
@@ -54,8 +56,13 @@ public final class PatchUtils {
 
                 if (patch.isURIResource())
                     patchURIs.add(patch.getURI());
-                else if (patch.isAnon())
-                    patchURIs.add("_:B" + patch.getId().toString());
+                else if (patch.isAnon()) {
+                    // anon patch, so only one patch in model allowed
+                    if (results.hasNext() || !patchURIs.isEmpty()) {
+                        throw new IllegalArgumentException("Multiple patches without URI: ambiguous.");
+                    }
+                    patchURIs.add(null);
+                }
             }
         } finally {
             if (qe != null) {
@@ -88,17 +95,17 @@ public final class PatchUtils {
                 "SELECT DISTINCT ?id ?desc ?datasetURI ?status WHERE { " +
                 "  %%PATCHURI%% a pat:Patch ; " +
                 "pat:appliesTo ?datasetURI . " +
-                "  OPTIONAL { %%PATCHURI%% pat:status ?status . } " +
+                "  OPTIONAL { %%PATCHURI%% pat:status ?status . } " +
                 "  OPTIONAL { %%PATCHURI%% dcterms:identifier ?id . } " +
                 "  OPTIONAL { %%PATCHURI%% dcterms:description ?desc . } " +
                 "}";
 
-        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
 
         Patch patch = null;
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
             ResultSet results = qe.execSelect();
 
             if (results.hasNext()) {
@@ -112,10 +119,11 @@ public final class PatchUtils {
                 String desc = qs.get("desc") == null ? null : qs.get("desc").toString();
 
                 //TODO bad fix
-                if (id == null) {
+                if (patchURI != null && id == null) {
                     String[] ids = patchURI.split("/");
                     id = ids[ids.length - 1];
                 }
+                //TODO bad fix
                 String prefix = getPatchPrefix(patchURI, id);
 
                 // Get patch provenances
@@ -155,12 +163,12 @@ public final class PatchUtils {
                 + "  OPTIONAL { ?provenance rdfs:comment ?comment . } "
                 + "}";
 
-        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
 
         Collection<Provenance> provenances = new ArrayList<>();
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
             ResultSet results = qe.execSelect();
 
             while (results.hasNext()) {
@@ -199,12 +207,12 @@ public final class PatchUtils {
                 "  OPTIONAL { ?update guo:insert ?insertGraph . } " +
                 "}";
 
-        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
 
         UpdateInstruction update = null;
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
             ResultSet results = qe.execSelect();
 
             while (results.hasNext()) {
@@ -250,12 +258,12 @@ public final class PatchUtils {
                 "  ?updateGraph ?p ?o . " +
                 "}";
 
-        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">").replaceAll("%%ACTION%%", actionPropertyURI));
+        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?patch" : "<" + patchURI + ">").replaceAll("%%ACTION%%", actionPropertyURI));
 
         Collection<Statement> statements = new ArrayList<>();
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">").replaceAll("%%ACTION%%", actionPropertyURI));
+            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?patch" : "<" + patchURI + ">").replaceAll("%%ACTION%%", actionPropertyURI));
             ResultSet results = qe.execSelect();
 
             while (results.hasNext()) {
@@ -284,12 +292,12 @@ public final class PatchUtils {
                 "  OPTIONAL { ?datasetURI void:sparqlGraph ?sparqlGraph . } " +
                 "}";
 
-        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+        PatchRepository.L.info(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
 
         Dataset dataset = null;
         QueryExecution qe = null;
         try {
-            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", "<" + patchURI + ">"));
+            qe = queryFactory.createQueryExecution(sparqlSelect.replaceAll("%%PATCHURI%%", (patchURI == null) ? "?p" : "<" + patchURI + ">"));
             ResultSet results = qe.execSelect();
 
             if (results.hasNext()) {

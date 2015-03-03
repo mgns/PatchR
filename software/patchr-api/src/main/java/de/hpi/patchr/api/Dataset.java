@@ -1,17 +1,15 @@
 package de.hpi.patchr.api;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import de.hpi.patchr.utils.PrefixService;
+import de.hpi.patchr.vocab.VoidOntology;
 import org.aksw.jena_sparql_api.cache.h2.CacheUtilsH2;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.delay.core.QueryExecutionFactoryDelay;
 import org.aksw.jena_sparql_api.http.QueryExecutionFactoryHttp;
 import org.aksw.jena_sparql_api.pagination.core.QueryExecutionFactoryPaginated;
 import org.apache.log4j.Logger;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-
-import de.hpi.patchr.utils.PrefixService;
-import de.hpi.patchr.vocab.VoidOntology;
 
 public class Dataset {
 

@@ -1,15 +1,14 @@
 package de.hpi.patchr.api;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
-
 import de.hpi.patchr.utils.PatchrUtils;
 import de.hpi.patchr.vocab.PatchrOntology;
 import de.hpi.patchr.vocab.ProvOntology;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author magnus
@@ -169,8 +168,10 @@ public class Patch {
      * cf knuth-m-2014-data: Data Cleansing Consolidation with PatchR, ESWC, 2014
      */
     public double getAggregatedConfidence() {
-        double aggConf = Double.MAX_VALUE;
+        if (getProvenance().isEmpty())
+            return 0.;
 
+        double aggConf = Double.MAX_VALUE;
         for (Provenance prov : getProvenance()) {
             if (aggConf == Double.MAX_VALUE)
                 aggConf = prov.getConfidence();

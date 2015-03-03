@@ -45,7 +45,8 @@ public class JenaPatchRepository extends PatchRepository {
                 return uri.replace(prefix, "");
         }
 
-        return null;    }
+        return null;
+    }
 
     private Query getPatchSelectQuery(Patch patch) {
         String q = PrefixService.getSparqlPrefixDecl() + "SELECT ?patch WHERE " + getPatchExistenceWhereClause(patch);
@@ -57,13 +58,13 @@ public class JenaPatchRepository extends PatchRepository {
 
         try {
             whereClause = "{\n"
-                + "?patch a pat:Patch ;\n"
-                + "  pat:appliesTo <" + patch.getDataset().getUri() + "> ;\n"
-                + "  pat:update ?update .\n"
-                + "?update guo:target_subject <" + patch.getUpdate().getSubject() + "> ;\n"
-                + (patch.getUpdate().isDeleteAction() ? "  guo:delete " + patch.getUpdate().getDeleteGraphAsBNode() + " .\n" : "")
-                + (patch.getUpdate().isInsertAction() ? "  guo:insert " + patch.getUpdate().getInsertGraphAsBNode() + " .\n" : "")
-                + "}";
+                    + "?patch a pat:Patch ;\n"
+                    + "  pat:appliesTo <" + patch.getDataset().getUri() + "> ;\n"
+                    + "  pat:update ?update .\n"
+                    + "?update guo:target_subject <" + patch.getUpdate().getSubject() + "> ;\n"
+                    + (patch.getUpdate().isDeleteAction() ? "  guo:delete " + patch.getUpdate().getDeleteGraphAsBNode() + " .\n" : "")
+                    + (patch.getUpdate().isInsertAction() ? "  guo:insert " + patch.getUpdate().getInsertGraphAsBNode() + " .\n" : "")
+                    + "}";
         } catch (InvalidUpdateInstructionException e) {
             L.error(e);
         }
