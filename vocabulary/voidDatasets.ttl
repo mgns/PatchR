@@ -1,4 +1,4 @@
-@base <https://raw.githubusercontent.com/mgns/PatchR/master/vocabulary/voidDBpediaDatasets.ttl> .
+@base <https://raw.githubusercontent.com/mgns/PatchR/master/vocabulary/voidDatasets.ttl> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix : <#> .
 @prefix void: <http://rdfs.org/ns/void#> .
