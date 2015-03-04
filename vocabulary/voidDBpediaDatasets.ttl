@@ -1,0 +1,240 @@
+@prefix : <#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wv: <http://vocab.org/waiver/terms/norms> .        
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+
+### DBpedia Main Chapter
+
+:DBpedia a void:Dataset ;
+	dcterms:title "DBpedia" ;
+	dcterms:description "RDF data extracted from Wikipedia" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://ckan.net/package/dbpedia> ;
+    foaf:page <http://dbpedia.org/Downloads> ;
+    void:sparqlEndpoint <http://dbpedia.org/sparql> ;
+    void:uriSpace "http://dbpedia.org/resource/" ;
+    void:uriRegexPattern """^http://dbpedia\.org/resource/""" ;
+    owl:sameAs :DBpedia_2014
+.
+
+## DBpedia Main Chapter Versions
+
+:DBpedia_2014 a void:Dataset ;
+	dcterms:title "DBpedia 2014" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads2014> ;
+	foaf:page <http://wiki.dbpedia.org/DumpDatesDBpedia2014> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:source <http://dbpedia.org/resource/Wikidata> ;
+	dcterms:created "2014-09-04"^^xsd:date
+.
+
+:DBpedia_3.9 a void:Dataset ;
+	dcterms:title "DBpedia 3.9" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads39> ;
+	foaf:page <http://wiki.dbpedia.org/DumpDatesDBpedia39> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:source <http://dbpedia.org/resource/Wikidata> ;
+	dcterms:created "2013-08-09"^^xsd:date
+.
+
+:DBpedia_3.8 a void:Dataset ;
+	dcterms:title "DBpedia 3.8" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads38> ;
+	foaf:page <http://wiki.dbpedia.org/DumpDatesDBpedia38> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2012-07-31"^^xsd:date
+.
+
+:DBpedia_3.7 a void:Dataset ;
+	dcterms:title "DBpedia 3.7" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads37> ;
+	foaf:page <http://wiki.dbpedia.org/DumpDatesDBpedia37> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2011-08-15"^^xsd:date
+.
+
+:DBpedia_3.6 a void:Dataset ;
+	dcterms:title "DBpedia 3.6" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads36> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2010-12-18"^^xsd:date
+.
+
+
+:DBpedia_3.5.1 a void:Dataset ;
+	dcterms:title "DBpedia 3.5.1" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads351> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2010-04-28"^^xsd:date
+.
+
+:DBpedia_3.5 a void:Dataset ;
+	dcterms:title "DBpedia 3.5" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads35> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2010-03-31"^^xsd:date
+.
+
+:DBpedia_3.4 a void:Dataset ;
+	dcterms:title "DBpedia 3.4" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads34> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2009-11-11"^^xsd:date
+.
+
+:DBpedia_3.3 a void:Dataset ;
+	dcterms:title "DBpedia 3.3" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads33> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2009-07-22"^^xsd:date
+.
+
+:DBpedia_3.2 a void:Dataset ;
+	dcterms:title "DBpedia 3.2" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads32> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2008-11-14"^^xsd:date
+.
+
+:DBpedia_3.1 a void:Dataset ;
+	dcterms:title "DBpedia 3.1" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads31> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2008-08-12"^^xsd:date
+.
+
+:DBpedia_3.0 a void:Dataset ;
+	dcterms:title "DBpedia 3.0" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads30> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2008-02-09"^^xsd:date
+.
+
+:DBpedia_3.0RC a void:Dataset ;
+	dcterms:title "DBpedia 3.0 Release Candidate" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads30RC> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2007-12-05"^^xsd:date
+.
+
+:DBpedia_2.0 a void:Dataset ;
+	dcterms:title "DBpedia 2.0" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	foaf:page <http://dbpedia.org/Downloads20> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+    dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2007-08-22"^^xsd:date
+.
+
+:DBpedia_1.0 a void:Dataset ;
+	dcterms:title "DBpedia 1.0" ;
+	foaf:homepage <http://dbpedia.org/> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:created "2007-03-01"^^xsd:date
+.
+
+## DBpedia Live
+
+:DBpedia_Live a void:Dataset ;
+	dcterms:title "DBpedia Live" ;
+	dcterms:description "RDF data extracted from Wikipedia and continuously synchronized" ;
+	foaf:homepage <http://live.dbpedia.org/> ;
+	foaf:page <http://wiki.dbpedia.org/DBpediaLive> ;
+	foaf:page <http://live.dbpedia.org/dumps/> ;
+	foaf:page <http://live.dbpedia.org/changesets> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:source <http://dbpedia.org/resource/Wikidata> ;
+    void:sparqlEndpoint <http://live.dbpedia.org/sparql> ;
+    void:uriSpace "http://dbpedia.org/resource/" ;
+    void:uriRegexPattern """^http://dbpedia\.org/resource/""" ;
+.
+
+## DBpedia German Chapter
+
+:DBpediaDE a void:Dataset ;
+	dcterms:title "German DBpedia" ;
+	dcterms:description "RDF data extracted from German Wikipedia" ;
+	foaf:homepage <http://de.dbpedia.org/> ;
+    foaf:page <http://de.dbpedia.org/downloads/> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:source <http://dbpedia.org/resource/Wikidata> ;
+    void:sparqlEndpoint <http://de.dbpedia.org/sparql> ;
+    void:uriSpace "http://de.dbpedia.org/resource/" ;
+    void:uriRegexPattern """^http://de.dbpedia\.org/resource/""" ;
+	dcterms:created "2014-09-02"^^xsd:date
+.
+
+## DBpedia Live German Chapter
+
+:DBpediaDE_Live a void:Dataset ;
+	dcterms:title "German DBpedia Live" ;
+	dcterms:description "RDF data extracted from German Wikipedia and continuously synchronized" ;
+	foaf:homepage <http://de.dbpedia.org/live> ;
+    foaf:page <http://live.de.dbpedia.org/changesets/> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikipedia> ;
+	dcterms:source <http://dbpedia.org/resource/Wikidata> ;
+    void:sparqlEndpoint <http://live.de.dbpedia.org/sparql> ;
+    void:uriSpace "http://de.dbpedia.org/resource/" ;
+    void:uriRegexPattern """^http://de.dbpedia\.org/resource/"""
+.
+
+## DBpedia Commons
+
+:DBpediaCommons a void:Dataset ;
+	dcterms:title "Commons DBpedia" ;
+	dcterms:description "RDF data extracted from Wikimedia Commons" ;
+	foaf:homepage <http://commons.dbpedia.org/> ;
+    foaf:page <http://dbpedia.semanticmultimedia.org/commons.dbpedia.org/> ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/4.0/> ;
+	dcterms:license <http://www.gnu.org/licenses/fdl> ;
+	dcterms:source <http://dbpedia.org/resource/Wikimedia_Commons> ;
+    void:sparqlEndpoint <http://commons.dbpedia.org/sparql> ;
+    void:uriSpace "http://commons.dbpedia.org/resource/" ;
+    void:uriRegexPattern """^http://commons.dbpedia\.org/resource/"""
+.
